@@ -22,15 +22,19 @@ def register_user():
     username = new_username_entry.get()
     password = new_password_entry.get()
     confirm_password = confirm_password_entry.get()
+    age = age_entry.get()
 
     if password != confirm_password:
         messagebox.showerror("Erro de Senha", "As senhas fornecidas não coincidem. Por favor, tente novamente.")
     else:
-        if db.get_user_by_username(username):
-            messagebox.showerror("Erro de Registro", "O nome de usuário já está em uso. Por favor, escolha outro.")
+        if int(age) < 18:
+            messagebox.showerror("Erro de Registro", "Proibido para menores de 18 anos.")
         else:
-            db.insert_user(username, password)
-            messagebox.showinfo("Registro Bem-sucedido", "OK, você foi registrado. Beba com moderação!")
+            if db.get_user_by_username(username):
+                messagebox.showerror("Erro de Registro", "O nome de usuário já está em uso. Por favor, escolha outro.")
+            else:
+                db.insert_user(username, password)
+                messagebox.showinfo("Registro Bem-sucedido", "OK, você foi registrado. Beba com moderação!")
 
 def register_window():
     # Criar nova janela para registro
@@ -59,8 +63,15 @@ def register_window():
     confirm_password_entry = tk.Entry(register_window, show="*", font=("Arial", 12))
     confirm_password_entry.grid(row=2, column=1, padx=10, pady=5)
 
+    age_label = tk.Label(register_window, text="Idade:", font=("Arial", 12))
+    age_label.grid(row=3, column=0, padx=10, pady=5)
+
+    global age_entry
+    age_entry = tk.Entry(register_window, font=("Arial", 12))
+    age_entry.grid(row=3, column=1, padx=10, pady=5)
+
     register_button = tk.Button(register_window, text="Registrar", width=15, font=("Arial", 12), command=register_user)
-    register_button.grid(row=3, columnspan=2, pady=10)
+    register_button.grid(row=4, columnspan=2, pady=10)
 
 def open_user_settings():
     user_settings_window = tk.Toplevel()
@@ -165,3 +176,4 @@ def main():
 # Verificar se este arquivo está sendo executado diretamente
 if __name__ == "__main__":
     main()
+
