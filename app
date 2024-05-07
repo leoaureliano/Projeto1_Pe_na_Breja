@@ -34,7 +34,7 @@ def register_user():
         else:
             db.insert_user(username, password)
             messagebox.showinfo("Registro Bem-sucedido", "OK, você foi registrado. Beba com moderação!")
-            register_window.destroy()  # Aqui corrigimos para chamar o método destroy() no objeto register_window
+            register_window.destroy()  # Fechar a janela de registro após o registro bem-sucedido
 
 def register_window():
     # Criar nova janela para registro
@@ -79,23 +79,103 @@ def open_user_settings():
     # Obtém as informações do usuário do banco de dados (isso pode variar dependendo de como você implementou o banco de dados)
     user_info = db.get_user_info()  # Isso deve retornar as informações do usuário (nome, data de nascimento, etc.)
 
-    # Rótulos e entradas para nome completo e data de nascimento
-    full_name_label = tk.Label(user_settings_window, text="Nome Completo:", font=("Arial", 12))
-    full_name_label.grid(row=0, column=0, padx=10, pady=5)
-    full_name_entry = tk.Entry(user_settings_window, font=("Arial", 12), width=30)
-    full_name_entry.grid(row=0, column=1, padx=10, pady=5)
-
-    dob_label = tk.Label(user_settings_window, text="Data de Nascimento:", font=("Arial", 12))
-    dob_label.grid(row=1, column=0, padx=10, pady=5)
-    dob_entry = tk.Entry(user_settings_window, font=("Arial", 12), width=30)
-    dob_entry.grid(row=1, column=1, padx=10, pady=5)
-
-    # Botão para trocar a senha
-    change_password_button = tk.Button(user_settings_window, text="Trocar Senha", width=15, font=("Arial", 12))
-    change_password_button.grid(row=2, columnspan=2, pady=10)
+    # Rótulo de boas-vindas
+    welcome_label = tk.Label(user_settings_window, text="Configurações do Usuário", font=("Arial", 14))
+    welcome_label.grid(row=0, column=0, columnspan=2, pady=20)
 
     # Botão de voltar
     back_button = tk.Button(user_settings_window, text="Voltar", width=10, font=("Arial", 12), command=user_settings_window.destroy)
+    back_button.grid(row=4, columnspan=2, pady=10)
+
+def add_beer():
+    second_menu.withdraw()  # Esconder o segundo menu
+
+    # Criar nova janela para adicionar cerveja
+    add_beer_window = tk.Toplevel()
+    add_beer_window.title("Adicionar Cerveja")
+
+    beer_name_label = tk.Label(add_beer_window, text="Nome da Cerveja:", font=("Arial", 12))
+    beer_name_label.grid(row=0, column=0, padx=10, pady=5)
+
+    global beer_name_entry
+    beer_name_entry = tk.Entry(add_beer_window, font=("Arial", 12))
+    beer_name_entry.grid(row=0, column=1, padx=10, pady=5)
+
+    rating_label = tk.Label(add_beer_window, text="Classificação (1-5):", font=("Arial", 12))
+    rating_label.grid(row=1, column=0, padx=10, pady=5)
+
+    global beer_rating_entry
+    beer_rating_entry = tk.Entry(add_beer_window, font=("Arial", 12))
+    beer_rating_entry.grid(row=1, column=1, padx=10, pady=5)
+
+    send_button = tk.Button(add_beer_window, text="Enviar", width=10, font=("Arial", 12), command=send_beer)
+    send_button.grid(row=2, columnspan=2, pady=10)
+
+    back_button = tk.Button(add_beer_window, text="Voltar", width=10, font=("Arial", 12), command=lambda: close_window(add_beer_window))
+    back_button.grid(row=3, columnspan=2, pady=10)
+
+def add_beer():
+    def send_beer():
+        beer_name = beer_name_entry.get()
+        beer_rating = beer_rating_entry.get()
+
+        # Aqui você enviará os dados para o banco de dados
+        db.insert_beer(beer_name, beer_rating)
+        messagebox.showinfo("Sucesso", "Cerveja adicionada com sucesso!")
+        add_beer_window.destroy()  # Fechar a janela de adicionar cerveja após o envio
+
+    second_menu.withdraw()  # Esconder o segundo menu
+
+    # Criar nova janela para adicionar cerveja
+    add_beer_window = tk.Toplevel()
+    add_beer_window.title("Adicionar Cerveja")
+
+    beer_name_label = tk.Label(add_beer_window, text="Nome da Cerveja:", font=("Arial", 12))
+    beer_name_label.grid(row=0, column=0, padx=10, pady=5)
+
+    global beer_name_entry
+    beer_name_entry = tk.Entry(add_beer_window, font=("Arial", 12))
+    beer_name_entry.grid(row=0, column=1, padx=10, pady=5)
+
+    rating_label = tk.Label(add_beer_window, text="Classificação (1-5):", font=("Arial", 12))
+    rating_label.grid(row=1, column=0, padx=10, pady=5)
+
+    global beer_rating_entry
+    beer_rating_entry = tk.Entry(add_beer_window, font=("Arial", 12))
+    beer_rating_entry.grid(row=1, column=1, padx=10, pady=5)
+
+    send_button = tk.Button(add_beer_window, text="Enviar", width=10, font=("Arial", 12), command=send_beer)
+    send_button.grid(row=2, columnspan=2, pady=10)
+
+    back_button = tk.Button(add_beer_window, text="Voltar", width=10, font=("Arial", 12), command=lambda: close_window(add_beer_window))
+    back_button.grid(row=3, columnspan=2, pady=10)
+
+
+def add_location():
+    second_menu.withdraw()  # Esconder o segundo menu
+
+    # Criar nova janela para adicionar local
+    add_location_window = tk.Toplevel()
+    add_location_window.title("Adicionar Local")
+
+    location_name_label = tk.Label(add_location_window, text="Nome do Local:", font=("Arial", 12))
+    location_name_label.grid(row=0, column=0, padx=10, pady=5)
+
+    global location_name_entry
+    location_name_entry = tk.Entry(add_location_window, font=("Arial", 12))
+    location_name_entry.grid(row=0, column=1, padx=10, pady=5)
+
+    rating_label = tk.Label(add_location_window, text="Classificação (1-5):", font=("Arial", 12))
+    rating_label.grid(row=1, column=0, padx=10, pady=5)
+
+    global location_rating_entry
+    location_rating_entry = tk.Entry(add_location_window, font=("Arial", 12))
+    location_rating_entry.grid(row=1, column=1, padx=10, pady=5)
+
+    send_button = tk.Button(add_location_window, text="Enviar", width=10, font=("Arial", 12), command=send_location)
+    send_button.grid(row=2, columnspan=2, pady=10)
+
+    back_button = tk.Button(add_location_window, text="Voltar", width=10, font=("Arial", 12), command=lambda: close_window(add_location_window))
     back_button.grid(row=3, columnspan=2, pady=10)
 
 def login_successful(username):
@@ -116,10 +196,10 @@ def login_successful(username):
     welcome_label.grid(row=0, column=0, pady=20)
 
     # Botões para adicionar cerveja e local
-    add_beer_button = tk.Button(second_menu, text="Adicione Cerveja", width=15, font=("Arial", 12))
+    add_beer_button = tk.Button(second_menu, text="Adicionar Cerveja", width=15, font=("Arial", 12), command=add_beer)
     add_beer_button.grid(row=1, column=0, padx=10, pady=10)
 
-    add_location_button = tk.Button(second_menu, text="Adicione Local", width=15, font=("Arial", 12))
+    add_location_button = tk.Button(second_menu, text="Adicionar Local", width=15, font=("Arial", 12), command=add_location)
     add_location_button.grid(row=1, column=1, padx=10, pady=10)
 
     # Botões para procurar locais e cervejas
@@ -137,6 +217,9 @@ def close_second_menu():
     # Fecha a janela do segundo menu e mostra a janela de login novamente
     second_menu.destroy()
     root.deiconify()
+
+def close_window(window):
+    window.destroy()
 
 # Função principal para iniciar o aplicativo
 def main():
