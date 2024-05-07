@@ -34,10 +34,11 @@ def register_user():
         else:
             db.insert_user(username, password)
             messagebox.showinfo("Registro Bem-sucedido", "OK, você foi registrado. Beba com moderação!")
-            register_window.destroy() 
+            register_window.destroy()  # Aqui corrigimos para chamar o método destroy() no objeto register_window
 
 def register_window():
     # Criar nova janela para registro
+    global register_window
     register_window = tk.Toplevel()
     register_window.title("Registrar")
 
