@@ -22,19 +22,18 @@ def register_user():
     username = new_username_entry.get()
     password = new_password_entry.get()
     confirm_password = confirm_password_entry.get()
-    age = age_entry.get()
+    is_over_18 = over_18_var.get()
 
     if password != confirm_password:
         messagebox.showerror("Erro de Senha", "As senhas fornecidas não coincidem. Por favor, tente novamente.")
+    elif not is_over_18:
+        messagebox.showerror("Erro de Registro", "Proibido para menores de 18 anos.")
     else:
-        if int(age) < 18:
-            messagebox.showerror("Erro de Registro", "Proibido para menores de 18 anos.")
+        if db.get_user_by_username(username):
+            messagebox.showerror("Erro de Registro", "O nome de usuário já está em uso. Por favor, escolha outro.")
         else:
-            if db.get_user_by_username(username):
-                messagebox.showerror("Erro de Registro", "O nome de usuário já está em uso. Por favor, escolha outro.")
-            else:
-                db.insert_user(username, password)
-                messagebox.showinfo("Registro Bem-sucedido", "OK, você foi registrado. Beba com moderação!")
+            db.insert_user(username, password)
+            messagebox.showinfo("Registro Bem-sucedido", "OK, você foi registrado. Beba com moderação!")
 
 def register_window():
     # Criar nova janela para registro
@@ -63,12 +62,10 @@ def register_window():
     confirm_password_entry = tk.Entry(register_window, show="*", font=("Arial", 12))
     confirm_password_entry.grid(row=2, column=1, padx=10, pady=5)
 
-    age_label = tk.Label(register_window, text="Idade:", font=("Arial", 12))
-    age_label.grid(row=3, column=0, padx=10, pady=5)
-
-    global age_entry
-    age_entry = tk.Entry(register_window, font=("Arial", 12))
-    age_entry.grid(row=3, column=1, padx=10, pady=5)
+    global over_18_var
+    over_18_var = tk.BooleanVar()
+    over_18_checkbox = tk.Checkbutton(register_window, text="Sou maior de 18 anos.", variable=over_18_var, font=("Arial", 12))
+    over_18_checkbox.grid(row=3, columnspan=2, padx=10, pady=5)
 
     register_button = tk.Button(register_window, text="Registrar", width=15, font=("Arial", 12), command=register_user)
     register_button.grid(row=4, columnspan=2, pady=10)
@@ -176,4 +173,3 @@ def main():
 # Verificar se este arquivo está sendo executado diretamente
 if __name__ == "__main__":
     main()
-
