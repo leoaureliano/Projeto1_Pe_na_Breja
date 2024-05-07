@@ -34,6 +34,7 @@ def register_user():
         else:
             db.insert_user(username, password)
             messagebox.showinfo("Registro Bem-sucedido", "OK, você foi registrado. Beba com moderação!")
+            register_window.destroy() 
 
 def register_window():
     # Criar nova janela para registro
