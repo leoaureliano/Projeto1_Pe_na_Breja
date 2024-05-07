@@ -88,33 +88,6 @@ def open_user_settings():
     back_button.grid(row=4, columnspan=2, pady=10)
 
 def add_beer():
-    second_menu.withdraw()  # Esconder o segundo menu
-
-    # Criar nova janela para adicionar cerveja
-    add_beer_window = tk.Toplevel()
-    add_beer_window.title("Adicionar Cerveja")
-
-    beer_name_label = tk.Label(add_beer_window, text="Nome da Cerveja:", font=("Arial", 12))
-    beer_name_label.grid(row=0, column=0, padx=10, pady=5)
-
-    global beer_name_entry
-    beer_name_entry = tk.Entry(add_beer_window, font=("Arial", 12))
-    beer_name_entry.grid(row=0, column=1, padx=10, pady=5)
-
-    rating_label = tk.Label(add_beer_window, text="Classificação (1-5):", font=("Arial", 12))
-    rating_label.grid(row=1, column=0, padx=10, pady=5)
-
-    global beer_rating_entry
-    beer_rating_entry = tk.Entry(add_beer_window, font=("Arial", 12))
-    beer_rating_entry.grid(row=1, column=1, padx=10, pady=5)
-
-    send_button = tk.Button(add_beer_window, text="Enviar", width=10, font=("Arial", 12), command=send_beer)
-    send_button.grid(row=2, columnspan=2, pady=10)
-
-    back_button = tk.Button(add_beer_window, text="Voltar", width=10, font=("Arial", 12), command=lambda: close_window(add_beer_window))
-    back_button.grid(row=3, columnspan=2, pady=10)
-
-def add_beer():
     def send_beer():
         beer_name = beer_name_entry.get()
         beer_rating = beer_rating_entry.get()
@@ -122,7 +95,8 @@ def add_beer():
         # Aqui você enviará os dados para o banco de dados
         db.insert_beer(beer_name, beer_rating)
         messagebox.showinfo("Sucesso", "Cerveja adicionada com sucesso!")
-        add_beer_window.destroy()  # Fechar a janela de adicionar cerveja após o envio
+        add_beer_window.withdraw()  # Esconder a janela de adicionar cerveja após o envio
+        second_menu.deiconify() 
 
     second_menu.withdraw()  # Esconder o segundo menu
 
@@ -147,11 +121,20 @@ def add_beer():
     send_button = tk.Button(add_beer_window, text="Enviar", width=10, font=("Arial", 12), command=send_beer)
     send_button.grid(row=2, columnspan=2, pady=10)
 
-    back_button = tk.Button(add_beer_window, text="Voltar", width=10, font=("Arial", 12), command=lambda: close_window(add_beer_window))
+    back_button = tk.Button(add_beer_window, text="Voltar", width=10, font=("Arial", 12), command=lambda: back_to_second_menu(add_beer_window))
     back_button.grid(row=3, columnspan=2, pady=10)
 
-
 def add_location():
+    def send_location():
+        location_name = location_name_entry.get()
+        location_rating = location_rating_entry.get()
+
+        # Aqui você enviará os dados para o banco de dados
+        db.insert_location(location_name, location_rating)
+        messagebox.showinfo("Sucesso", "Local adicionado com sucesso!")
+        add_location_window.withdraw()  # Esconder a janela de adicionar local após o envio
+        second_menu.deiconify()
+        
     second_menu.withdraw()  # Esconder o segundo menu
 
     # Criar nova janela para adicionar local
@@ -175,8 +158,13 @@ def add_location():
     send_button = tk.Button(add_location_window, text="Enviar", width=10, font=("Arial", 12), command=send_location)
     send_button.grid(row=2, columnspan=2, pady=10)
 
-    back_button = tk.Button(add_location_window, text="Voltar", width=10, font=("Arial", 12), command=lambda: close_window(add_location_window))
+    back_button = tk.Button(add_location_window, text="Voltar", width=10, font=("Arial", 12), command=lambda: back_to_second_menu(add_location_window))
     back_button.grid(row=3, columnspan=2, pady=10)
+
+def back_to_second_menu(window):
+    window.destroy()  # Fechar a janela atual
+    second_menu.deiconify()  # Mostrar o segundo menu
+
 
 def login_successful(username):
     # Exibir segundo menu após o login bem-sucedido
