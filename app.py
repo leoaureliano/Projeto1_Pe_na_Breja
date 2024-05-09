@@ -33,7 +33,7 @@ def register_user():
             messagebox.showerror("Erro de Registro", "O nome de usuário já está em uso. Por favor, escolha outro.")
         else:
             db.insert_user(username, password)
-            messagebox.showinfo("Registro Bem-sucedido", "OK, você foi registrado. Beba com moderação!")
+            messagebox.showinfo("Registro Bem-sucedido", "Beba com moderação!")
             register_window.destroy()  # Fechar a janela de registro após o registro bem-sucedido
 
 def register_window():
@@ -94,7 +94,7 @@ def add_beer():
 
         # Aqui você enviará os dados para o banco de dados
         db.insert_beer(beer_name, beer_rating)
-        messagebox.showinfo("Sucesso", "Cerveja adicionada com sucesso!")
+        messagebox.showinfo("Cerveja adicionada com sucesso!")
         add_beer_window.withdraw()  # Esconder a janela de adicionar cerveja após o envio
         second_menu.deiconify() 
 
@@ -214,7 +214,7 @@ def main():
     # Criar janela principal
     global root
     root = tk.Tk()
-    root.title("App de Cervejas e Locais de Visita")
+    root.title("App de Cervejas e Tour cervejeiros")
 
     # Rótulo de boas-vindas
     welcome_label = tk.Label(root, text="Pe na Breja", font=("Arial", 18))
