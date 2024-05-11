@@ -165,7 +165,6 @@ def back_to_second_menu(window):
     window.destroy()  # Fechar a janela atual
     second_menu.deiconify()  # Mostrar o segundo menu
 
-
 def login_successful(username):
     # Exibir segundo menu após o login bem-sucedido
     root.withdraw()  # Esconde a janela de login
@@ -209,6 +208,34 @@ def close_second_menu():
 def close_window(window):
     window.destroy()
 
+def read_bares(filename):
+    with open(filename, "r", encoding="utf-8") as file:
+        bares = [line.strip() for line in file if line.strip()]
+    return bares
+
+def add_rating():
+    # Verifica se um bar foi selecionado
+    selected_bar = bares_listbox.get(tk.ACTIVE)
+    if not selected_bar:
+        messagebox.showerror("Erro", "Selecione um bar antes de adicionar a nota.")
+        return
+
+    # Verifica se a nota é válida
+    try:
+        rating = float(rating_var.get())
+        if not 1 <= rating <= 5:
+            raise ValueError
+    except ValueError:
+        messagebox.showerror("Erro", "Insira uma nota válida (entre 1 e 5).")
+        return
+
+    # Salva a nota (aqui você pode adicionar a lógica para salvar a nota no banco de dados)
+    messagebox.showinfo("Nota Adicionada", f"Nota {rating} adicionada para {selected_bar}.")
+
+    # Limpa os campos e retorna ao segundo menu
+    rating_var.set("")
+    root.deiconify()  # Mostra a janela principal novamente
+
 # Função principal para iniciar o aplicativo
 def main():
     # Criar janela principal
@@ -239,6 +266,45 @@ def main():
     # Botão de registro
     register_button = tk.Button(root, text="Registrar", width=15, font=("Arial", 12), command=register)
     register_button.pack(pady=10)
+
+    # Ler os bares do arquivo
+    global bares_listbox
+    bares = read_bares("Bares_do_Recife.txt")
+
+    # Frame para os bares
+    bares_frame = tk.Frame(root)
+    bares_frame.pack(pady=10)
+
+    bares_label = tk.Label(bares_frame, text="Bares", font=("Arial", 12))
+    bares_label.pack()
+
+    bares_listbox = tk.Listbox(bares_frame, width=50, height=10, font=("Arial", 12))
+    bares_listbox.pack(side=tk.LEFT, fill=tk.BOTH)
+
+    scrollbar = tk.Scrollbar(bares_frame, orient=tk.VERTICAL)
+    scrollbar.config(command=bares_listbox.yview)
+    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+    bares_listbox.config(yscrollcommand=scrollbar.set)
+
+    for bar in bares:
+        bares_listbox.insert(tk.END, bar)
+
+    # Campo para adicionar nota
+    global rating_var
+    rating_var = tk.StringVar()
+
+    rating_frame = tk.Frame(root)
+    rating_frame.pack(pady=10)
+
+    rating_label = tk.Label(rating_frame, text="Adicionar Nota (1-5):", font=("Arial", 12))
+    rating_label.pack(side=tk.LEFT)
+
+    rating_entry = tk.Entry(rating_frame, textvariable=rating_var, font=("Arial", 12), width=5)
+    rating_entry.pack(side=tk.LEFT)
+
+    add_rating_button = tk.Button(rating_frame, text="Adicionar Nota", font=("Arial", 12), command=add_rating)
+    add_rating_button.pack(side=tk.LEFT, padx=10)
 
     # Executar o loop principal da interface gráfica
     root.mainloop()
