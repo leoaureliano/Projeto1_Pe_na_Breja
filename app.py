@@ -177,42 +177,53 @@ def show_bares():
     try:
         bares = read_bares("Bares_do_Recife.txt")
         if bares:
+            global bares_window
             bares_window = tk.Toplevel()
             bares_window.title("Bares do Recife")
 
             for i, bar in enumerate(bares):
-                tk.Label(bares_window, text=bar, font=("Arial", 12)).grid(row=i, column=0, padx=10, pady=5)
+                label = tk.Label(bares_window, text=bar, font=("Arial", 12))
+                label.grid(row=i, column=0, padx=10, pady=5)
 
-                mark_button = tk.Button(bares_window, text="Marcar", font=("Arial", 12), command=lambda bar_name=bar: mark_bar(bar_name))
+                # Botão para marcar o bar
+                mark_button = tk.Button(bares_window, text="Marcar", font=("Arial", 10), command=lambda b=bar: mark_bar(b))
                 mark_button.grid(row=i, column=1, padx=10, pady=5)
 
             # Botão para fechar a janela
-            close_button = tk.Button(bares_window, text="Fechar", width=10, font=("Arial", 12), command=bares_window.destroy)
-            close_button.grid(row=i+1, column=0, pady=10)
+            close_button = tk.Button(bares_window, text="Fechar", width=10, font=("Arial", 12), command=close_bares_window)
+            close_button.grid(row=i+1, column=0, columnspan=2, pady=10)
         else:
             messagebox.showinfo("Informação", "Não há bares disponíveis.")
     except UnicodeDecodeError:
         messagebox.showerror("Erro", "Erro ao ler o arquivo.")
 
+def close_bares_window():
+    bares_window.destroy()
+
 def mark_bar(bar_name):
-    mark_window = tk.Toplevel()
-    mark_window.title(f"Marcar {bar_name}")
+    # Abrir popup para dar nota ao bar
+    global vote_popup
+    vote_popup = tk.Toplevel()
+    vote_popup.title("Votar")
 
-    rating_label = tk.Label(mark_window, text="Nota (1-5):", font=("Arial", 12))
-    rating_label.grid(row=0, column=0, padx=10, pady=5)
+    label = tk.Label(vote_popup, text=f"Marcar e dar nota para {bar_name}", font=("Arial", 12))
+    label.pack(padx=10, pady=5)
 
-    global rating_entry
-    rating_entry = tk.Entry(mark_window, font=("Arial", 12))
-    rating_entry.grid(row=0, column=1, padx=10, pady=5)
+    rating_label = tk.Label(vote_popup, text="Classificação (1-5):", font=("Arial", 12))
+    rating_label.pack(padx=10, pady=5)
 
-    send_button = tk.Button(mark_window, text="Confirmar", width=10, font=("Arial", 12), command=send_rating)
-    send_button.grid(row=1, columnspan=2, pady=10)
+    global bar_rating_entry
+    bar_rating_entry = tk.Entry(vote_popup, font=("Arial", 12))
+    bar_rating_entry.pack(padx=10, pady=5)
 
-def send_rating():
-    rating = rating_entry.get()
-    # Aqui você pode processar a avaliação, enviar para o banco de dados, etc.
-    messagebox.showinfo("Avaliação Enviada", f"Avaliação {rating} enviada com sucesso!")
-    rating_entry.delete(0, tk.END)  # Limpa o campo de entrada após o envio
+    confirm_button = tk.Button(vote_popup, text="Confirmar", font=("Arial", 12), command=lambda: confirm_vote(bar_name))
+    confirm_button.pack(padx=10, pady=5)
+
+def confirm_vote(bar_name):
+    rating = bar_rating_entry.get()
+    # Aqui você pode salvar a avaliação no banco de dados
+    messagebox.showinfo("Sucesso", f"Avaliação de {rating} para {bar_name} confirmada.")
+    vote_popup.destroy()
 
 def login_successful(username):
     # Exibir segundo menu após o login bem-sucedido
