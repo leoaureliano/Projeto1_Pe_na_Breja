@@ -182,6 +182,8 @@ def show_bares():
 
             for i, bar in enumerate(bares):
                 tk.Label(bares_window, text=bar, font=("Arial", 12)).grid(row=i, column=0, padx=10, pady=5)
+                mark_button = tk.Button(bares_window, text="Marcar", width=10, font=("Arial", 12), command=lambda b=bar: mark_bar(b))
+                mark_button.grid(row=i, column=1, padx=10, pady=5)
 
             # Botão para fechar a janela
             close_button = tk.Button(bares_window, text="Fechar", width=10, font=("Arial", 12), command=bares_window.destroy)
@@ -190,6 +192,28 @@ def show_bares():
             messagebox.showinfo("Informação", "Não há bares disponíveis.")
     except UnicodeDecodeError:
         messagebox.showerror("Erro", "Erro ao ler o arquivo.")
+
+def mark_bar(bar):
+    def send_rating():
+        rating = rating_entry.get()
+        if rating.isdigit() and 1 <= int(rating) <= 5:
+            db.mark_bar(bar, int(rating))
+            messagebox.showinfo("Sucesso", "Bar marcado com sucesso!")
+            mark_window.destroy()
+        else:
+            messagebox.showerror("Erro", "Avaliação inválida. A nota deve ser um número inteiro entre 1 e 5.")
+
+    mark_window = tk.Toplevel()
+    mark_window.title("Marcar Bar")
+
+    tk.Label(mark_window, text=f"Marcar o bar \"{bar}\"", font=("Arial", 12)).grid(row=0, columnspan=2, pady=10)
+
+    tk.Label(mark_window, text="Avaliação (1-5):", font=("Arial", 12)).grid(row=1, column=0, padx=10, pady=5)
+    rating_entry = tk.Entry(mark_window, font=("Arial", 12))
+    rating_entry.grid(row=1, column=1, padx=10, pady=5)
+
+    send_button = tk.Button(mark_window, text="Confirmar", width=10, font=("Arial", 12), command=send_rating)
+    send_button.grid(row=2, columnspan=2, pady=10)
 
 def login_successful(username):
     # Exibir segundo menu após o login bem-sucedido
