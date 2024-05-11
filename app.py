@@ -225,6 +225,24 @@ def confirm_vote(bar_name):
     messagebox.showinfo("Sucesso", f"Avaliação de {rating} para {bar_name} confirmada.")
     vote_popup.destroy()
 
+def show_cervejas():
+    try:
+        cervejas = read_bares("cervejas_do_Brasil.txt")
+        if cervejas:
+            cervejas_window = tk.Toplevel()
+            cervejas_window.title("Cervejas do Brasil")
+
+            for i, cerveja in enumerate(cervejas):
+                tk.Label(cervejas_window, text=cerveja, font=("Arial", 12)).grid(row=i, column=0, padx=10, pady=5)
+
+            # Botão para fechar a janela
+            close_button = tk.Button(cervejas_window, text="Fechar", width=10, font=("Arial", 12), command=cervejas_window.destroy)
+            close_button.grid(row=i+1, column=0, pady=10)
+        else:
+            messagebox.showinfo("Informação", "Não há cervejas disponíveis.")
+    except UnicodeDecodeError:
+        messagebox.showerror("Erro", "Erro ao ler o arquivo.")
+
 def login_successful(username):
     # Exibir segundo menu após o login bem-sucedido
     root.withdraw()  # Esconde a janela de login
@@ -253,7 +271,7 @@ def login_successful(username):
     search_locations_button = tk.Button(second_menu, text="Procurar Locais", width=15, font=("Arial", 12), command=show_bares)
     search_locations_button.grid(row=2, column=0, padx=10, pady=10)
 
-    search_beers_button = tk.Button(second_menu, text="Procurar Cervejas", width=15, font=("Arial", 12))
+    search_beers_button = tk.Button(second_menu, text="Procurar Cervejas", width=15, font=("Arial", 12), command=show_cervejas)
     search_beers_button.grid(row=2, column=1, padx=10, pady=10)
 
     # Botão de sair
