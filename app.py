@@ -197,9 +197,6 @@ def show_bares():
     except UnicodeDecodeError:
         messagebox.showerror("Erro", "Erro ao ler o arquivo.")
 
-def close_bares_window():
-    bares_window.destroy()
-
 def mark_bar(bar_name):
     # Abrir popup para dar nota ao bar
     global vote_popup
@@ -229,19 +226,56 @@ def show_cervejas():
     try:
         cervejas = read_bares("cervejas_do_Brasil.txt")
         if cervejas:
+            global cervejas_window
             cervejas_window = tk.Toplevel()
             cervejas_window.title("Cervejas do Brasil")
 
             for i, cerveja in enumerate(cervejas):
-                tk.Label(cervejas_window, text=cerveja, font=("Arial", 12)).grid(row=i, column=0, padx=10, pady=5)
+                label = tk.Label(cervejas_window, text=cerveja, font=("Arial", 12))
+                label.grid(row=i, column=0, padx=10, pady=5)
+
+                # Botão para marcar a cerveja
+                mark_button = tk.Button(cervejas_window, text="Marcar", font=("Arial", 10), command=lambda c=cerveja: mark_beer(c))
+                mark_button.grid(row=i, column=1, padx=10, pady=5)
 
             # Botão para fechar a janela
-            close_button = tk.Button(cervejas_window, text="Fechar", width=10, font=("Arial", 12), command=cervejas_window.destroy)
-            close_button.grid(row=i+1, column=0, pady=10)
+            close_button = tk.Button(cervejas_window, text="Fechar", width=10, font=("Arial", 12), command=close_cervejas_window)
+            close_button.grid(row=i+1, column=0, columnspan=2, pady=10)
         else:
             messagebox.showinfo("Informação", "Não há cervejas disponíveis.")
     except UnicodeDecodeError:
         messagebox.showerror("Erro", "Erro ao ler o arquivo.")
+
+def mark_beer(beer_name):
+    # Abrir popup para dar nota à cerveja
+    global vote_popup
+    vote_popup = tk.Toplevel()
+    vote_popup.title("Votar")
+
+    label = tk.Label(vote_popup, text=f"Marcar e dar nota para {beer_name}", font=("Arial", 12))
+    label.pack(padx=10, pady=5)
+
+    rating_label = tk.Label(vote_popup, text="Classificação (1-5):", font=("Arial", 12))
+    rating_label.pack(padx=10, pady=5)
+
+    global beer_rating_entry
+    beer_rating_entry = tk.Entry(vote_popup, font=("Arial", 12))
+    beer_rating_entry.pack(padx=10, pady=5)
+
+    confirm_button = tk.Button(vote_popup, text="Confirmar", font=("Arial", 12), command=lambda: confirm_beer_vote(beer_name))
+    confirm_button.pack(padx=10, pady=5)
+
+def confirm_beer_vote(beer_name):
+    rating = beer_rating_entry.get()
+    # Aqui você pode salvar a avaliação no banco de dados
+    messagebox.showinfo("Sucesso", f"Avaliação de {rating} para {beer_name} confirmada.")
+    vote_popup.destroy()
+
+def close_bares_window():
+    bares_window.destroy()
+
+def close_cervejas_window():
+    cervejas_window.destroy()
 
 def login_successful(username):
     # Exibir segundo menu após o login bem-sucedido
